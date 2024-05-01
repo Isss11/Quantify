@@ -5,8 +5,8 @@ import StockForm from './components/StockForm.vue';
 import ModelInformation from './components/ModelInformation.vue';
 
 // Requests to create a ML model from the back-end
-function requestModel() {
-    alert(ticker.value)
+const handleRequestModel = (event, value) =>{
+    alert("From the child:" + value)
 }
 
 const ticker = ref('')
@@ -18,7 +18,7 @@ const ticker = ref('')
   </header>
 
   <main>
-    <StockForm ticker={{ticker}}></StockForm>
+    <StockForm @request-model="handleRequestModel"></StockForm>
     <ModelInformation></ModelInformation>
     {{ticker}}
   </main>
