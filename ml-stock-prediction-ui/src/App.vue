@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from 'vue';
 import NavHeader from './components/NavHeader.vue'
 import StockForm from './components/StockForm.vue';
 import ModelInformation from './components/ModelInformation.vue';
@@ -8,8 +7,6 @@ import ModelInformation from './components/ModelInformation.vue';
 const handleRequestModel = (event, value) =>{
     alert("From the child:" + value)
 }
-
-const ticker = ref('')
 </script>
 
 <template>
@@ -20,6 +17,5 @@ const ticker = ref('')
   <main>
     <StockForm @request-model="handleRequestModel"></StockForm>
     <ModelInformation></ModelInformation>
-    {{ticker}}
   </main>
 </template>
