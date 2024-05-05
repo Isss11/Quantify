@@ -3,11 +3,12 @@ from django.http import HttpResponse
 from . import ARIMAForecaster
 
 # Constructs a ARIMA model to forecast stock returns, using ML
-def constructModel(request):
+def arimaForecast(request):
     forecaster = ARIMAForecaster.ARIMAForecaster("C")
     
     # Obtains the actual approximated percentage returns from the training data, and the 15 days of forecasted returns
-    stockReturns = forecaster.createModel()
+    forecaster.createModel()
+    forecastedReturns = forecaster.getForecasts(15)
     
     
-    return HttpResponse(str(forecaster.stockPrices))
+    return HttpResponse(str(forecastedReturns))

@@ -43,7 +43,7 @@ class ARIMAForecaster:
     
     # Higher-level method to abstract model creation (for the user to call)
     def createModel(self):
-        p, q = forecaster.obtainARIMAParameters()
+        p, q = self.obtainARIMAParameters()
         
         # Have already differenced the data and verified stationarity, so I do not need to difference data more
         self.model = self.constructARIMA(p, 0, q)
@@ -51,9 +51,10 @@ class ARIMAForecaster:
         print(self.model.summary())
         
     # Obtains optimal p and q fit values for ARIMA model using information criteria
-    def obtainARIMAParameters(self):
+    def obtainARIMAParameters(self):        
         acfResults = tsa.acf(self.stockPrices['logDifAdjClose'], alpha=0.05)
         pacfResults = tsa.pacf(self.stockPrices['logDifAdjClose'], alpha=0.05)
+        
         
         # TODO: Replace this with an IC based selection of criteria
         # Will probably need to test residuals
@@ -67,15 +68,10 @@ class ARIMAForecaster:
     
     # Creates s-step ahead forecasts with the given model
     def getForecasts(self, s):
-        stockReturnForecasts = self.model.forecast(15)
-        
-        stockReturnsWithForecasts = pd.DataFrame(self.stockPrices, columns=['date', 'logDifAdjClose'])
 
-        # Add Dates to Forecasted date
-        # Obtain final in-sample date
-        finalDate = stockReturnsWithForecasts.iloc[len(stockReturnsWithForecasts) - 1]['date']
-
+        finalDate = self.getFinalRealizedDate()
         stockForecastDates = []
+        stockReturnForecasts = self.model.forecast(s)
 
         for i in range(1, len(stockReturnForecasts) + 1):
             stockForecastDates.append(finalDate + pd.DateOffset(days=i))
@@ -83,19 +79,33 @@ class ARIMAForecaster:
         stockReturnForecasts = pd.DataFrame({'date': stockForecastDates, 'logDifAdjClose': stockReturnForecasts})
         stockReturnForecasts = stockReturnForecasts.reset_index(drop=True)
 
-        # Concatenate dataframes
+        return stockReturnForecasts
+    
+    # Gets combined forecasted and realized returns
+    def getCombinedReturns(self, s):
+        stockReturnsWithForecasts = pd.DataFrame(self.stockPrices, columns=['date', 'logDifAdjClose'])
+
+        # Add Dates to Forecasted date
+        # Obtain final in-sample date
+        finalDate = self.getFinalRealizedDate()
+        
+        stockReturnForecasts = forecaster.getForecasts(s)
+        
         stockReturnsWithForecasts = pd.concat([stockReturnsWithForecasts, stockReturnForecasts])
         stockReturnsWithForecasts = stockReturnsWithForecasts.reset_index(drop=True)
         
         stockReturnsWithForecasts = stockReturnsWithForecasts.rename(columns={'logDifAdjClose': 'approxDailyReturn'})
-
+        
         return stockReturnsWithForecasts
         
+    # Get final date of recorded returns
+    def getFinalRealizedDate(self):
+        return self.stockPrices.iloc[len(self.stockPrices) - 1]['date']
         
 # Class manual testing code
 if __name__ == "__main__":
     forecaster = ARIMAForecaster("C")
     forecaster.createModel()
-    stockReturnsWithForecasts = forecaster.getForecasts(15)
+    stockReturnsWithForecasts = forecaster.getCombinedReturns(15)
     
     print(stockReturnsWithForecasts)

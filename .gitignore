@@ -2,3 +2,4 @@ stockPredictorEnv/
 stock_forecaster/db.sqlite3
 *.pyc
 stock_forecaster/stock_forecaster/__pycache__/urls.cpython-311.pyc
+stock_forecaster/stock_forecaster/__pycache__/urls.cpython-311.pyc
