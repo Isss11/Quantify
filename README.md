@@ -6,4 +6,4 @@ This project uses machine learning concepts to forecast specified stocks. It als
 
 ## Acknowledgments
 
-I used [this website](https://www.geeksforgeeks.org/stock-price-prediction-using-machine-learning-in-python/) as a guideline to construct the machine learning model in this project.
+*Will list acknowledgements here, if needed.*

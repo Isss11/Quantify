@@ -5,6 +5,7 @@ import statsmodels.api as sm
 import statsmodels.tsa.stattools as tsa
 import statsmodels.tsa.arima.model as arima
 import statsmodels.graphics.tsaplots as tsaPlots
+import pmdarima as pm
 import yfinance as yf
 
 # Uses Auto-regressive Integrated Moving Average Model to perform short-term forecasts of stocks
@@ -26,8 +27,6 @@ class ARIMAForecaster:
     
     # Obtains an approximation of percentage returns, contingent on the first-differenced series being stationary
     def calculateReturns(self):
-        pass
-        # TODO: Obtain returns
         # Constructing a new variable to achieve a stationary process.
         # Getting log difference approximation of percentage changes (a way of first differencing the data)
         self.stockPrices['logAdjClose'] = np.log(self.stockPrices['adjClose'])
@@ -35,7 +34,6 @@ class ARIMAForecaster:
 
         # Dropping first row as it does not have a percentage change
         self.stockPrices = self.stockPrices.dropna()
-        # TODO: Test for stationarity of returns data, early return if it is not stationary (should be stationary considering financial theory)
         
     # Tests if the process is stationary
     def isStationaryProcess(self):
@@ -43,28 +41,22 @@ class ARIMAForecaster:
     
     # Higher-level method to abstract model creation (for the user to call)
     def createModel(self):
-        p, q = self.obtainARIMAParameters()
+        p, d, q = self.obtainARIMAParameters()
+        
+        # TODO: thow an exception
+        if d > 0:
+            print("An error has occurred. Returns are non-stationary.")
+            return
         
         # Have already differenced the data and verified stationarity, so I do not need to difference data more
-        self.model = self.constructARIMA(p, 0, q)
-        
-        print(self.model.summary())
+        self.model = arima.ARIMA(endog=self.stockPrices['logDifAdjClose'], order=(p, 0, q)).fit()
         
     # Obtains optimal p and q fit values for ARIMA model using information criteria
     def obtainARIMAParameters(self):        
-        acfResults = tsa.acf(self.stockPrices['logDifAdjClose'], alpha=0.05)
-        pacfResults = tsa.pacf(self.stockPrices['logDifAdjClose'], alpha=0.05)
+        # Using auto_arima from a different package to optain optimal p and q
+        autoARIMAModel = pm.auto_arima(self.stockPrices['logDifAdjClose'], start_p=1, start_q=1, test='adf', max_p=30, max_q=30, information_criterion='aic', stepwise=True)
         
-        
-        # TODO: Replace this with an IC based selection of criteria
-        # Will probably need to test residuals
-        # Reference this: https://www.geeksforgeeks.org/box-jenkins-methodology-for-arima-models/
-        return 2,2
-
-    
-    # Creates an ARIMA model with the provided p, d and q model
-    def constructARIMA(self, p, d, q):
-        return arima.ARIMA(endog=self.stockPrices['logDifAdjClose'], order=(p, 0, q)).fit()
+        return autoARIMAModel.order[0], autoARIMAModel.order[1], autoARIMAModel.order[2]
     
     # Creates s-step ahead forecasts with the given model
     def getForecasts(self, s):
@@ -73,6 +65,7 @@ class ARIMAForecaster:
         stockForecastDates = []
         stockReturnForecasts = self.model.forecast(s)
 
+        # FIXME: Adjust for weekends
         for i in range(1, len(stockReturnForecasts) + 1):
             stockForecastDates.append(finalDate + pd.DateOffset(days=i))
 
@@ -106,6 +99,6 @@ class ARIMAForecaster:
 if __name__ == "__main__":
     forecaster = ARIMAForecaster("C")
     forecaster.createModel()
-    stockReturnsWithForecasts = forecaster.getCombinedReturns(15)
+    stockReturnsWithForecasts = forecaster.getCombinedReturns(4)
     
     print(stockReturnsWithForecasts)
