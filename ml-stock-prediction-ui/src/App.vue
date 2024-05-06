@@ -3,7 +3,6 @@ import NavHeader from './components/NavHeader.vue'
 import StockForm from './components/StockForm.vue';
 import ModelInformation from './components/ModelInformation.vue';
 import axios from 'axios';
-import { onMounted } from 'vue';
 
 // Requests to create a ML model from the back-end
 const handleRequestModel = (event, inputTicker, inputForecastPeriod) =>{
@@ -16,12 +15,6 @@ const handleRequestModel = (event, inputTicker, inputForecastPeriod) =>{
     .catch(e => alert(e))
 
 }
-
-onMounted(() => {
-  axios.get("http://127.0.0.1:8000/stockTickers")
-  .then(response => alert(response.data))
-  .catch(e => alert(e))
-})
 </script>
 
 <template>

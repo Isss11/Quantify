@@ -18,8 +18,3 @@ def arimaForecast(request):
     
     # Allowing non-dictionary values to serialized by setting safe equal to false
     return JsonResponse(forecastedReturns.to_json(), status=status.HTTP_200_OK, safe=False)
-
-# Gets all the valid stock tickers to send back to the UI
-@api_view(['GET'])
-def stockTickers(request):
-    return JsonResponse(GetTickers.getTickers(), status=status.HTTP_200_OK, safe=False)
