@@ -15,7 +15,8 @@ const handleSubmit = (event) => {
 <template>
     <h2>Enter Stock Information</h2>
     <form @submit.prevent="handleSubmit">
-        <input v-model="ticker" placeholder="Ticker Symbol"/>
+        <select v-model="forecastPeriod">
+        </select>
         <input type="number" min="1" v-model="forecastPeriod" placeholder="Forecast Period"/>
         <button>Forecast</button>
     </form>

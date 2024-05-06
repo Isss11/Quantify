@@ -7,3 +7,5 @@ This project uses machine learning concepts to forecast specified stocks. It als
 ## Acknowledgments
 
 *Will list acknowledgements here, if needed.*
+
+1. For valid tickers file: https://github.com/ahnazary/Finance/blob/master/finance/src/database/valid_tickers.csv
