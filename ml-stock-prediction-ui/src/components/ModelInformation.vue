@@ -1,6 +1,4 @@
 <script setup>
-import ForecastedReturnsTable from './ForecastedReturnsTable.vue';
-import ReturnsGraph from './ReturnsGraph.vue';
 </script>
 
 <template>

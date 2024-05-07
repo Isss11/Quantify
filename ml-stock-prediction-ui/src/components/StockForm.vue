@@ -2,7 +2,6 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import validTickers from '@/assets/validTickers';
-import StockDetail from './StockDetail.vue';
 
 const ticker = ref('')
 const forecastPeriod = ref('')
@@ -19,8 +18,6 @@ const handleChange = (e) => {
     .then(response => {
         ticker.value = e;
         stockDetails.value = response.data;
-        console.log(ticker.value)
-        console.log(stockDetails.value.name)
     })
     .catch(e => alert("Stock not available for forecasting."))
 }

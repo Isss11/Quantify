@@ -75,17 +75,18 @@ class ARIMAForecaster:
         return stockReturnForecasts
     
     # Gets combined forecasted and realized returns
-    def getCombinedReturns(self, s):
-        stockReturnsRealized = pd.DataFrame(self.stockPrices, columns=['date', 'logDifAdjClose'])
+    def getReturns(self, s):
+        realizedStockReturns = pd.DataFrame(self.stockPrices, columns=['date', 'logDifAdjClose'])
+        realizedStockReturns = realizedStockReturns.rename(columns={'logDifAdjClose': 'approxDailyReturn'})
         
-        stockReturnForecasts = self.getForecasts(s)
+        forecastedStockReturns = self.getForecasts(s)
+        forecastedStockReturns = forecastedStockReturns.rename(columns={'logDifAdjClose': 'approxDailyReturn'})
         
-        stockReturnsWithForecasts = pd.concat([stockReturnsRealized, stockReturnForecasts])
-        stockReturnsWithForecasts = stockReturnsWithForecasts.reset_index(drop=True)
+        # Organize data into a dictionary to be consumed
+        stockReturns = {'realized': {'date': realizedStockReturns['date'].tolist(), 'returns': realizedStockReturns['approxDailyReturn'].tolist()},
+                        'forecasted': {'date': forecastedStockReturns['date'].tolist(), 'returns': forecastedStockReturns['approxDailyReturn'].tolist()}}
         
-        stockReturnsWithForecasts = stockReturnsWithForecasts.rename(columns={'logDifAdjClose': 'approxDailyReturn'})
-        
-        return stockReturnsWithForecasts
+        return stockReturns
         
     # Get final date of recorded returns
     def getFinalRealizedDate(self):
@@ -95,6 +96,4 @@ class ARIMAForecaster:
 if __name__ == "__main__":
     forecaster = ARIMAForecaster("C")
     forecaster.createModel()
-    stockReturnsWithForecasts = forecaster.getCombinedReturns(4)
-    
-    print(stockReturnsWithForecasts)
+    stockReturnsWithForecasts = forecaster.getReturns(4)

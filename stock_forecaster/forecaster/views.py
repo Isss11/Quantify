@@ -15,11 +15,10 @@ def arimaForecast(request):
     
     # Obtains the actual approximated percentage returns from the training data forecasted returns
     forecaster.createModel()
-    allReturns = forecaster.getCombinedReturns(requestValues["forecastLength"])
-    print(allReturns.to_json())
+    returns = forecaster.getReturns(requestValues["forecastLength"])
     
     # Allowing non-dictionary values to serialized by setting safe equal to false
-    return JsonResponse(allReturns.to_json(), status=status.HTTP_200_OK, safe=False)
+    return JsonResponse(returns)
 
 # Returns general stock information used in the UI
 @api_view(['POST'])
