@@ -1,12 +1,10 @@
 <script setup>
-    const props = defineProps(['ticker', 'companyName', 'price', 'low', 'high', ])
+    const props = defineProps(['ticker', 'companyName', 'price', 'currency' ])
 </script>
 
 <template>
-    <span>
+    <span v-if="props.ticker">
         <h3>{{props.companyName}} ({{ props.ticker }})</h3>
-        <h4>{{ props.price }} USD</h4>
+        <h4>{{ props.price }} {{props.currency}}</h4>
     </span>
-
-
 </template>

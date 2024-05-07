@@ -13,10 +13,7 @@ class StockDetail:
         generalInfo["tickerSymbol"] = self.stock.info['underlyingSymbol']
         generalInfo["name"] = self.stock.info["shortName"]
         generalInfo["price"] = self.stock.info["currentPrice"]
-        
-        generalInfo["low"] = self.stock.info["regularMarketDayLow"]
-        generalInfo["high"] = self.stock.info["regularMarketDayHigh"]
-        generalInfo["description"] = self.stock.info["longBusinessSummary"]
+        generalInfo["currency"] = self.stock.info["financialCurrency"]
         
         return generalInfo
         

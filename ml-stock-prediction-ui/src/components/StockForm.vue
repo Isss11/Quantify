@@ -7,7 +7,7 @@ import StockDetail from './StockDetail.vue';
 const ticker = ref('')
 const forecastPeriod = ref('')
 const stockDetails = ref({})
-const props = defineProps(['onSubmit'])
+const chosenModel = ref('')
 const emit = defineEmits(['request-model'])
 
 const handleSubmit = (e) => {
@@ -35,8 +35,21 @@ const handleChange = (e) => {
             :items="validTickers"
             @selectItem="handleChange"
         />
+
         <input type="number" min="1" v-model="forecastPeriod" placeholder="Forecast Period"/>
+        <StockDetail :ticker="ticker" :companyName="stockDetails.name" :price="stockDetails.price" :currency="stockDetails.currency"</StockDetail>
+
+        <div>
+            <label for="modelType">Model Type</label>
+            <div id="modelType">
+                <label for="arima">ARIMA</label>
+                <input id="arima" type="radio" v-model="chosenModel" value="arima"/>
+                <label for="ml">ML</label>
+                <input id="ml" type="radio" v-model="chosenModel" value="ml"/>
+            </div>  
+        </div>
+
         <button>Forecast</button>
-        <StockDetail :ticker="ticker" :companyName="stockDetails.name" :price="stockDetails.price"</StockDetail>
+
     </form>
 </template>

@@ -3,6 +3,9 @@ import NavHeader from './components/NavHeader.vue'
 import StockForm from './components/StockForm.vue';
 import ModelInformation from './components/ModelInformation.vue';
 import axios from 'axios';
+import { ref } from 'vue';
+
+// TODO: Send forecasted values to model here
 
 // Requests to create a ML model from the back-end
 const handleRequestModel = (event, inputTicker, inputForecastPeriod) =>{

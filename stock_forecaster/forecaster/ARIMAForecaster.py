@@ -76,15 +76,11 @@ class ARIMAForecaster:
     
     # Gets combined forecasted and realized returns
     def getCombinedReturns(self, s):
-        stockReturnsWithForecasts = pd.DataFrame(self.stockPrices, columns=['date', 'logDifAdjClose'])
-
-        # Add Dates to Forecasted date
-        # Obtain final in-sample date
-        finalDate = self.getFinalRealizedDate()
+        stockReturnsRealized = pd.DataFrame(self.stockPrices, columns=['date', 'logDifAdjClose'])
         
-        stockReturnForecasts = forecaster.getForecasts(s)
+        stockReturnForecasts = self.getForecasts(s)
         
-        stockReturnsWithForecasts = pd.concat([stockReturnsWithForecasts, stockReturnForecasts])
+        stockReturnsWithForecasts = pd.concat([stockReturnsRealized, stockReturnForecasts])
         stockReturnsWithForecasts = stockReturnsWithForecasts.reset_index(drop=True)
         
         stockReturnsWithForecasts = stockReturnsWithForecasts.rename(columns={'logDifAdjClose': 'approxDailyReturn'})
