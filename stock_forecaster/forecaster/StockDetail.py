@@ -5,17 +5,18 @@ import json
 # Class that returns basic stock information about the selected stock
 class StockDetail:
     def __init__(self, ticker) -> None:
-        self.stock = yf.Ticker(ticker).info
+        self.stock = yf.Ticker(ticker)
         
     # Returning relevant information from Yahoo Finance API
     def getGeneralInfo(self):
         generalInfo = dict()
-        generalInfo["tickerSymbol"] = self.stock['underlyingSymbol']
-        generalInfo["name"] = self.stock["shortName"]
-        generalInfo["exchange"] = self.stock["exchange"]
-        generalInfo["low"] = self.stock["fiftyTwoWeekLow"]
-        generalInfo["high"] = self.stock["fiftyTwoWeekHigh"]
-        generalInfo["description"] = self.stock["longBusinessSummary"]
+        generalInfo["tickerSymbol"] = self.stock.info['underlyingSymbol']
+        generalInfo["name"] = self.stock.info["shortName"]
+        generalInfo["price"] = self.stock.info["currentPrice"]
+        
+        generalInfo["low"] = self.stock.info["regularMarketDayLow"]
+        generalInfo["high"] = self.stock.info["regularMarketDayHigh"]
+        generalInfo["description"] = self.stock.info["longBusinessSummary"]
         
         return generalInfo
         
