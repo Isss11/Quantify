@@ -31,9 +31,10 @@ class ARIMAForecaster:
         # Getting log difference approximation of percentage changes (a way of first differencing the data)
         self.stockPrices['logAdjClose'] = np.log(self.stockPrices['adjClose'])
         self.stockPrices['logDifAdjClose'] = self.stockPrices['logAdjClose'].diff()
-
-        # Dropping first row as it does not have a percentage change
+        
+        # Convert to percentage changes (and drop top row since it does not have a percentage change)
         self.stockPrices = self.stockPrices.dropna()
+        self.stockPrices['logDifAdjClose'] = self.stockPrices['logDifAdjClose'] * 100
         
     # Tests if the process is stationary
     def isStationaryProcess(self):
@@ -82,6 +83,10 @@ class ARIMAForecaster:
         forecastedStockReturns = self.getForecasts(s)
         forecastedStockReturns = forecastedStockReturns.rename(columns={'logDifAdjClose': 'approxDailyReturn'})
         
+        # Remove time from date columns
+        realizedStockReturns['date'] = realizedStockReturns['date'].dt.date
+        forecastedStockReturns['date'] = forecastedStockReturns['date'].dt.date
+        
         # Organize data into a dictionary to be consumed
         stockReturns = {'realized': {'date': realizedStockReturns['date'].tolist(), 'returns': realizedStockReturns['approxDailyReturn'].tolist()},
                         'forecasted': {'date': forecastedStockReturns['date'].tolist(), 'returns': forecastedStockReturns['approxDailyReturn'].tolist()}}
@@ -94,6 +99,7 @@ class ARIMAForecaster:
         
 # Class manual testing code
 if __name__ == "__main__":
-    forecaster = ARIMAForecaster("C")
+    forecaster = ARIMAForecaster("AAPL")
     forecaster.createModel()
-    stockReturnsWithForecasts = forecaster.getReturns(4)
+    stockReturnsWithForecasts = forecaster.getReturns(5)
+    print(stockReturnsWithForecasts)

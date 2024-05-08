@@ -10,7 +10,7 @@ const chosenModel = ref('')
 const emit = defineEmits(['request-model'])
 
 const handleSubmit = (e) => {
-    emit('request-model', e, ticker.value, forecastPeriod.value)
+    emit('request-model', e, ticker.value, forecastPeriod.value, chosenModel.value)
 }
 
 const handleChange = (e) => {

@@ -1,40 +1,34 @@
 <script setup>
 import axios from 'axios';
+import { ref } from 'vue';
 
-// Requests to create a ML model from the back-end
-const handleRequestModel = (event, inputTicker, inputForecastPeriod) =>{
-    // FIXME: Remove specific IP and port specification
+const modelReturns = ref({});
+const modelExists = ref(false);
+const ticker = ref('');
+const forecastPeriod = ref('');
+
+
+// Requests to forecast stock returns using an ARIMA model
+const handleRequestModel = (e, inputTicker, inputForecastPeriod, chosenModel) => {
+  // ARIMA Model
+  if (chosenModel === 'arima') {
     axios.post("http://127.0.0.1:8000/arimaForecast/", {
       ticker: inputTicker,
       forecastLength: inputForecastPeriod
     })
-    .then(response => (alert(response.data)))
+    .then(response => {
+      // An empty object is truthy, so boolean ref was created to denote whether the model information component should be rendered or not
+      modelReturns.value = response.data;
+      modelExists.value = true;
+      ticker.value = inputTicker;
+      forecastPeriod.value = inputForecastPeriod;
+
+      console.log("Realized and Forecasted Values (ARIMA): ", modelReturns.value);
+    })
     .catch(e => alert(e))
+  // TODO: ML Model
+  } else {
 
-}
-</script>
-<script>
-import { Line } from 'vue-chartjs';
-import {Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend} from 'chart.js'
-import * as chartConfig from './chartConfig.js'
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-)
-
-export default {
-  name: 'App',
-  components: {
-    Line
-  },
-  data() {
-    return chartConfig
   }
 }
 </script>
@@ -45,9 +39,7 @@ export default {
   </header>
 
   <main>
-    <StockForm @request-model="handleRequestModel"></StockForm>
-    <ModelInformation></ModelInformation>
+    <StockForm @request-model="handleRequestModel"/>
+    <ModelInformation v-if="modelExists" :returns="modelReturns" :ticker="ticker"/>
   </main>
-
-  <Line :data="data" :options="options" />
 </template>
