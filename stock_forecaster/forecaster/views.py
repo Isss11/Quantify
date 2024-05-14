@@ -11,14 +11,13 @@ import json
 @api_view(['POST'])
 def arimaForecast(request):
     requestValues = JSONParser().parse(request)
-    forecaster = ARIMAForecaster.ARIMAForecaster(requestValues["ticker"])
+    forecaster = ARIMAForecaster.ARIMAForecaster(requestValues["ticker"], requestValues["sampleStartDate"])
     
     # Obtains the actual approximated percentage returns from the training data forecasted returns
     modelDetails = forecaster.createModel()
     returns = forecaster.getReturns(requestValues["forecastLength"])
     
     response = dict(returns)
-    print(type(modelDetails))
     response['modelDetails'] = modelDetails
     
     # Allowing non-dictionary values to serialized by setting safe equal to false

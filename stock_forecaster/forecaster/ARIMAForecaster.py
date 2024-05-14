@@ -10,14 +10,14 @@ import yfinance as yf
 
 # Uses Auto-regressive Integrated Moving Average Model to perform short-term forecasts of stocks
 class ARIMAForecaster:
-    def __init__(self, ticker) -> None:
-        self.stockPrices = self.retrieveData(ticker)
+    def __init__(self, ticker, sampleStartDate) -> None:
+        self.stockPrices = self.retrieveData(ticker, sampleStartDate)
         self.calculateReturns()
     
     # Retrives data from Yahoo Finance
     # Only need dates and adjusted close data
-    def retrieveData(self, ticker):
-        stockPrices = yf.download(ticker, start="2010-01-01")
+    def retrieveData(self, ticker, sampleStartDate):
+        stockPrices = yf.download(ticker, start=sampleStartDate)
         stockPrices = stockPrices.dropna()
         stockPrices = stockPrices.reset_index()
         stockPrices = stockPrices.rename(columns={"Date": "date", "Open": "open", "High": "high", "Low": "low", "Close": "close", "Adj Close": "adjClose", "Volume": "volume"})

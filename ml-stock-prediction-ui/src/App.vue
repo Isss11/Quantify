@@ -9,12 +9,13 @@ const forecastPeriod = ref('');
 
 
 // Requests to forecast stock returns using an ARIMA model
-const handleRequestModel = (e, inputTicker, inputForecastPeriod, chosenModel) => {
+const handleRequestModel = (e, inputTicker, inputForecastPeriod, chosenModel, startDate) => {
   // ARIMA Model
   if (chosenModel === 'arima') {
     axios.post("http://127.0.0.1:8000/arimaForecast/", {
       ticker: inputTicker,
-      forecastLength: inputForecastPeriod
+      forecastLength: inputForecastPeriod,
+      sampleStartDate: startDate
     })
       .then(response => {
         // An empty object is truthy, so boolean ref was created to denote whether the model information component should be rendered or not

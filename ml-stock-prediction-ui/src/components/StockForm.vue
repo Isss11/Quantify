@@ -7,10 +7,11 @@ const ticker = ref('')
 const forecastPeriod = ref('')
 const stockDetails = ref({})
 const chosenModel = ref('')
+const startDate = ref('2010-01-01')
 const emit = defineEmits(['request-model'])
 
 const handleSubmit = (e) => {
-    emit('request-model', e, ticker.value, forecastPeriod.value, chosenModel.value)
+    emit('request-model', e, ticker.value, forecastPeriod.value, chosenModel.value, startDate.value)
 }
 
 const handleChange = (e) => {
@@ -33,6 +34,7 @@ const handleChange = (e) => {
             @selectItem="handleChange"
         />
 
+        <input type="date" v-model="startDate" id="startDate" name="startDate"/>
         <input type="number" min="1" v-model="forecastPeriod" placeholder="Forecast Period"/>
         <StockDetail :ticker="ticker" :companyName="stockDetails.name" :price="stockDetails.price" :currency="stockDetails.currency"</StockDetail>
 
