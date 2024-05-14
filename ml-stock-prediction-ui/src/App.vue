@@ -16,17 +16,17 @@ const handleRequestModel = (e, inputTicker, inputForecastPeriod, chosenModel) =>
       ticker: inputTicker,
       forecastLength: inputForecastPeriod
     })
-    .then(response => {
-      // An empty object is truthy, so boolean ref was created to denote whether the model information component should be rendered or not
-      modelReturns.value = response.data;
-      modelExists.value = true;
-      ticker.value = inputTicker;
-      forecastPeriod.value = inputForecastPeriod;
+      .then(response => {
+        // An empty object is truthy, so boolean ref was created to denote whether the model information component should be rendered or not
+        modelReturns.value = response.data;
+        modelExists.value = true;
+        ticker.value = inputTicker;
+        forecastPeriod.value = inputForecastPeriod;
 
-      console.log("Realized and Forecasted Values (ARIMA): ", modelReturns.value);
-    })
-    .catch(e => alert(e))
-  // TODO: ML Model
+        console.log("Realized and Forecasted Values (ARIMA): ", modelReturns.value);
+      })
+      .catch(e => alert(e))
+    // TODO: ML Model
   } else {
 
   }
@@ -35,11 +35,11 @@ const handleRequestModel = (e, inputTicker, inputForecastPeriod, chosenModel) =>
 
 <template>
   <header>
-    <NavHeader/>
+    <NavHeader />
   </header>
 
   <main>
-    <StockForm @request-model="handleRequestModel"/>
-    <ModelInformation v-if="modelExists" :returns="modelReturns" :ticker="ticker"/>
+    <StockForm @request-model="handleRequestModel" />
+    <Model v-if="modelExists" :returns="modelReturns" :ticker="ticker" :forecastLength="forecastPeriod" />
   </main>
 </template>

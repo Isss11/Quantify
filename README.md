@@ -1,4 +1,4 @@
-# Machine Learning Stock Forecaster
+# Quantify
 
 *This project is currently being worked on, and is not finished*.
 

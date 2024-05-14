@@ -36,7 +36,7 @@ class ARIMAForecaster:
         self.stockPrices = self.stockPrices.dropna()
         self.stockPrices['logDifAdjClose'] = self.stockPrices['logDifAdjClose'] * 100
         
-    # Tests if the process is stationary
+    # TODO: Ensures differenced process is stationary.
     def isStationaryProcess(self):
         pass
     
@@ -51,6 +51,22 @@ class ARIMAForecaster:
         
         # Have already differenced the data and verified stationarity, so I do not need to difference data more
         self.model = arima.ARIMA(endog=self.stockPrices['logDifAdjClose'], order=(p, 0, q)).fit()
+        
+        print(self.model.summary())
+        
+        return self.getModelDetails()
+    
+    # Extracts the model details from the current model summary
+    def getModelDetails(self):
+        modelSummary = pd.read_html(self.model.summary().tables[1].as_html(), header=0)[0]
+        modelSummary = modelSummary.rename(columns={'std err': 'stdErr', 'P>|z|': 'p', 'coef': 'coefficient', '[0.025': 'lowerBound', '0.975]': 'upperBound', 'Unnamed: 0': 'estimator'})
+        
+        # Convert Model Summary to a Dictionary for the FE
+        modelDetails = []
+        for i in range(modelSummary.shape[0]):
+            modelDetails.append(modelSummary.iloc[i].to_dict())
+        
+        return modelDetails
         
     # Obtains optimal p and q fit values for ARIMA model using information criteria
     def obtainARIMAParameters(self):        
@@ -100,6 +116,7 @@ class ARIMAForecaster:
 # Class manual testing code
 if __name__ == "__main__":
     forecaster = ARIMAForecaster("AAPL")
-    forecaster.createModel()
-    stockReturnsWithForecasts = forecaster.getReturns(5)
-    print(stockReturnsWithForecasts)
+    modelDetails = forecaster.createModel()
+    print(modelDetails)
+    # stockReturnsWithForecasts = forecaster.getReturns(5)
+    # print(stockReturnsWithForecasts)
