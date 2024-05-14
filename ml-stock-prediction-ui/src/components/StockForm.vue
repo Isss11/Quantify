@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import axios from 'axios';
 import validTickers from '@/assets/validTickers';
 
@@ -15,12 +15,12 @@ const handleSubmit = (e) => {
 }
 
 const handleChange = (e) => {
-    axios.post("http://127.0.0.1:8000/stockDetail/" + e + "/")
+    axios.post("http://127.0.0.1:8000/stockDetail/" + e.input + "/")
     .then(response => {
-        ticker.value = e;
+        ticker.value = e.input;
         stockDetails.value = response.data;
     })
-    .catch(e => alert("Stock not available for forecasting."))
+    .catch(e => console.log("Stock not available for forecasting."))
 }
 </script>
 
@@ -31,7 +31,8 @@ const handleChange = (e) => {
             id="tickerSelector"
             placeholder="Stock Ticker"
             :items="validTickers"
-            @selectItem="handleChange"
+            @onInput="handleChange"
+            :minInputLength="1"
         />
 
         <input type="date" v-model="startDate" id="startDate" name="startDate"/>

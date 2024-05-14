@@ -3,7 +3,8 @@ import { ref } from 'vue';
 
 const props = defineProps(['realized', 'forecasted', 'ticker', 'forecastLength']);
 
-const dataRealized = {
+const getDataRealized = () => {
+  return {
   labels: props.realized.date,
   datasets: [
     {
@@ -12,9 +13,11 @@ const dataRealized = {
       data: props.realized.returns,
     }
   ]
+  }
 }
 
-const dataForecasted = {
+const getDataForecasted = () => {
+  return {
   labels: props.forecasted.date,
   datasets: [
     {
@@ -24,6 +27,30 @@ const dataForecasted = {
     }
   ]
 }
+}
+
+const getOptionsRealized = () => {
+  return {
+    scales: {
+      y: {
+        suggestedMin: -15,
+        suggestedMax: 15
+      }
+    }
+  }
+}
+
+const getOptionsForecasted = () => {
+  return {
+    scales: {
+      y: {
+        suggestedMin: -0.5,
+        suggestedMax: 0.5
+      }
+    }
+  }
+}
+
 </script>
 
 <script>
@@ -36,7 +63,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 
 <template>
     <h3>Realized Returns (approximated)</h3>
-    <Line :data="dataRealized"/>
+    <Line :data="getDataRealized()" :options="getOptionsRealized()"/>
     <h3>Forecasted Returns ({{ props.forecastLength }}-day forecast, approximated)</h3>
-    <Line :data="dataForecasted"/>
+    <Line :data="getDataForecasted()" :options="getOptionsForecasted()"/>
 </template>

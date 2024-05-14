@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { ref } from 'vue';
 
-const modelReturns = ref({});
+const modelReturns = ref();
 const modelExists = ref(false);
 const ticker = ref('');
 const forecastPeriod = ref('');
