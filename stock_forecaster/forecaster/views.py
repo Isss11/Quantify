@@ -15,7 +15,7 @@ def arimaForecast(request):
     
     # Obtains the actual approximated percentage returns from the training data forecasted returns
     modelDetails = forecaster.createModel()
-    returns = forecaster.getReturns(requestValues["forecastLength"])
+    returns = forecaster.getCombinedReturns(requestValues["forecastLength"])
     
     response = dict(returns)
     response['modelDetails'] = modelDetails

@@ -1,40 +1,12 @@
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import statsmodels.api as sm
-import statsmodels.tsa.stattools as tsa
 import statsmodels.tsa.arima.model as arima
-import statsmodels.graphics.tsaplots as tsaPlots
 import pmdarima as pm
-import yfinance as yf
+from . import StockPrices
 
 # Uses Auto-regressive Integrated Moving Average Model to perform short-term forecasts of stocks
 class ARIMAForecaster:
     def __init__(self, ticker, sampleStartDate) -> None:
-        self.stockPrices = self.retrieveData(ticker, sampleStartDate)
-        self.calculateReturns()
-    
-    # Retrives data from Yahoo Finance
-    # Only need dates and adjusted close data
-    def retrieveData(self, ticker, sampleStartDate):
-        stockPrices = yf.download(ticker, start=sampleStartDate)
-        stockPrices = stockPrices.dropna()
-        stockPrices = stockPrices.reset_index()
-        stockPrices = stockPrices.rename(columns={"Date": "date", "Open": "open", "High": "high", "Low": "low", "Close": "close", "Adj Close": "adjClose", "Volume": "volume"})
-        stockPrices = stockPrices.drop(columns=['open', 'high', 'low', 'close', 'volume'])
-        
-        return stockPrices
-    
-    # Obtains an approximation of percentage returns, contingent on the first-differenced series being stationary
-    def calculateReturns(self):
-        # Constructing a new variable to achieve a stationary process.
-        # Getting log difference approximation of percentage changes (a way of first differencing the data)
-        self.stockPrices['logAdjClose'] = np.log(self.stockPrices['adjClose'])
-        self.stockPrices['logDifAdjClose'] = self.stockPrices['logAdjClose'].diff()
-        
-        # Convert to percentage changes (and drop top row since it does not have a percentage change)
-        self.stockPrices = self.stockPrices.dropna()
-        self.stockPrices['logDifAdjClose'] = self.stockPrices['logDifAdjClose'] * 100
+        self.stock = StockPrices.StockPrices(ticker, sampleStartDate)
         
     # TODO: Ensures differenced process is stationary.
     def isStationaryProcess(self):
@@ -50,7 +22,7 @@ class ARIMAForecaster:
             return
         
         # Have already differenced the data and verified stationarity, so I do not need to difference data more
-        self.model = arima.ARIMA(endog=self.stockPrices['logDifAdjClose'], order=(p, 0, q)).fit()
+        self.model = arima.ARIMA(endog=self.stock.prices['logDifAdjClose'], order=(p, 0, q)).fit()
         
         print(self.model.summary())
         
@@ -71,14 +43,14 @@ class ARIMAForecaster:
     # Obtains optimal p and q fit values for ARIMA model using information criteria
     def obtainARIMAParameters(self):        
         # Using auto_arima from a different package to optain optimal p and q
-        autoARIMAModel = pm.auto_arima(self.stockPrices['logDifAdjClose'], start_p=1, start_q=1, test='adf', max_p=30, max_q=30, information_criterion='aic', stepwise=True)
+        autoARIMAModel = pm.auto_arima(self.stock.prices['logDifAdjClose'], start_p=1, start_q=1, test='adf', max_p=30, max_q=30, information_criterion='aic', stepwise=True)
         
         return autoARIMAModel.order[0], autoARIMAModel.order[1], autoARIMAModel.order[2]
     
     # Creates s-step ahead forecasts with the given model
     def getForecasts(self, s):
 
-        finalDate = self.getFinalRealizedDate()
+        finalDate = self.stock.getFinalRealizedDate()
         stockForecastDates = []
         stockReturnForecasts = self.model.forecast(s)
 
@@ -92,8 +64,8 @@ class ARIMAForecaster:
         return stockReturnForecasts
     
     # Gets combined forecasted and realized returns
-    def getReturns(self, s):
-        realizedStockReturns = pd.DataFrame(self.stockPrices, columns=['date', 'logDifAdjClose'])
+    def getCombinedReturns(self, s):
+        realizedStockReturns = pd.DataFrame(self.stock.prices, columns=['date', 'logDifAdjClose'])
         realizedStockReturns = realizedStockReturns.rename(columns={'logDifAdjClose': 'approxDailyReturn'})
         
         forecastedStockReturns = self.getForecasts(s)
@@ -109,14 +81,10 @@ class ARIMAForecaster:
         
         return stockReturns
         
-    # Get final date of recorded returns
-    def getFinalRealizedDate(self):
-        return self.stockPrices.iloc[len(self.stockPrices) - 1]['date']
-        
 # Class manual testing code
 if __name__ == "__main__":
     forecaster = ARIMAForecaster("AAPL")
     modelDetails = forecaster.createModel()
     print(modelDetails)
-    # stockReturnsWithForecasts = forecaster.getReturns(5)
+    # stockReturnsWithForecasts = forecaster.getCombinedReturns(5)
     # print(stockReturnsWithForecasts)
