@@ -4,7 +4,7 @@ const props = defineProps(['modelDetails'])
 </script>
 
 <template>
-    <h3>Model Details (SARIMA)</h3>
+    <h3>Model Details</h3>
     <table>
         <tr>
             <th>Estimator</th>

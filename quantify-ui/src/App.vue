@@ -12,9 +12,8 @@ const forecastPeriod = ref('');
 const handleRequestModel = (e, inputTicker, inputForecastPeriod, chosenModel, startDate) => {
   // ARIMA Model
   if (chosenModel === 'arima') {
-    // FIXME: Fix issue with not being able to get the inputTicker
     axios.post("http://127.0.0.1:8000/arimaForecast/", {
-      ticker: "AAPL", 
+      ticker: inputTicker, 
       forecastLength: inputForecastPeriod,
       sampleStartDate: startDate
     })

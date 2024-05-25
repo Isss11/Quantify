@@ -1,6 +1,6 @@
 # Quantify
 
-_This project is currently being worked on, and is not finished_.
+_This project is currently being worked on_.
 
 ## Set-up
 
