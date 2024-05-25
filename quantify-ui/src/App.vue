@@ -1,30 +1,45 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
+import axios from 'axios';
+import { ref } from 'vue';
+
+const modelReturns = ref();
+const modelExists = ref(false);
+const ticker = ref('');
+const forecastPeriod = ref('');
+
+
+// Requests to forecast stock returns using an ARIMA model
+const handleRequestModel = (e, inputTicker, inputForecastPeriod, chosenModel, startDate) => {
+  // ARIMA Model
+  if (chosenModel === 'arima') {
+    // FIXME: Fix issue with not being able to get the inputTicker
+    axios.post("http://127.0.0.1:8000/arimaForecast/", {
+      ticker: "AAPL", 
+      forecastLength: inputForecastPeriod,
+      sampleStartDate: startDate
+    })
+      .then(response => {
+        // An empty object is truthy, so boolean ref was created to denote whether the model information component should be rendered or not
+        modelReturns.value = response.data;
+        modelExists.value = true;
+        ticker.value = inputTicker;
+        forecastPeriod.value = inputForecastPeriod;
+
+        console.log("Realized and Forecasted Values (ARIMA): ", modelReturns.value);
+      })
+      .catch(e => alert(e))
+    // TODO: ML Model
+  }
+}
 </script>
 
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
-</template>
+  <header>
+    <NavHeader />
+  </header>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-</style>
+  <main>
+    <StockForm @request-model="handleRequestModel" />
+    <Model v-if="modelExists" :returns="modelReturns" :ticker="ticker" :forecastLength="forecastPeriod" />
+  </main>
+</template>
