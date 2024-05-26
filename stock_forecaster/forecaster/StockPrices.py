@@ -5,7 +5,6 @@ import pandas as pd
 class StockPrices:
     def __init__(self, ticker, sampleStartDate) -> None:
         self.prices = self.retrieveData(ticker, sampleStartDate)
-        self.calculateReturns()
     
     # Retrives data from Yahoo Finance
     # Only need dates and adjusted close data
@@ -32,3 +31,7 @@ class StockPrices:
     # Get final date of recorded returns
     def getFinalRealizedDate(self):
         return self.prices.iloc[len(self.prices) - 1]['date']
+    
+    # Creates a row of normalized data, given a scaler
+    def getNormalizedData(self, scaler):
+        return scaler.fit_transform(pd.DataFrame(self.prices['adjClose']))

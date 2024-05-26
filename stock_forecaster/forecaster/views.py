@@ -23,6 +23,11 @@ def arimaForecast(request):
     # Allowing non-dictionary values to serialized by setting safe equal to false
     return JsonResponse(response)
 
+@api_view(['POST'])
+def lstmForecast(request):
+    return JsonResponse(dict())
+    
+
 # Returns general stock information used in the UI
 @api_view(['POST'])
 def stockDetail(request, stockTicker):

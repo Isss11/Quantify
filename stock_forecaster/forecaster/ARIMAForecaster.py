@@ -1,12 +1,13 @@
 import pandas as pd
 import statsmodels.tsa.arima.model as arima
 import pmdarima as pm
-from . import StockPrices
+from StockPrices import StockPrices
 
 # Uses Auto-regressive Integrated Moving Average Model to perform short-term forecasts of stocks
 class ARIMAForecaster:
     def __init__(self, ticker, sampleStartDate) -> None:
-        self.stock = StockPrices.StockPrices(ticker, sampleStartDate)
+        self.stock = StockPrices(ticker, sampleStartDate)
+        self.stock.calculateReturns()
         
     # TODO: Ensures differenced process is stationary.
     def isStationaryProcess(self):
@@ -83,8 +84,8 @@ class ARIMAForecaster:
         
 # Class manual testing code
 if __name__ == "__main__":
-    forecaster = ARIMAForecaster("AAPL")
+    forecaster = ARIMAForecaster("AAPL", "2010-01-01")
     modelDetails = forecaster.createModel()
     print(modelDetails)
-    # stockReturnsWithForecasts = forecaster.getCombinedReturns(5)
-    # print(stockReturnsWithForecasts)
+    stockReturnsWithForecasts = forecaster.getCombinedReturns(5)
+    print(stockReturnsWithForecasts)

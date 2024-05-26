@@ -48,7 +48,6 @@ py manage.py runserver
 
 ## Acknowledgments
 
-_Will list acknowledgements here, if needed._
-
 1. For valid tickers file: https://github.com/ahnazary/Finance/blob/master/finance/src/database/valid_tickers.csv
-2. For LSTM model code: https://www.youtube.com/watch?v=CbTU92pbDKw&t.
+2. https://www.youtube.com/watch?v=CbTU92pbDKw&t.
+3. https://machinelearningmastery.com/time-series-prediction-lstm-recurrent-neural-networks-python-keras/
