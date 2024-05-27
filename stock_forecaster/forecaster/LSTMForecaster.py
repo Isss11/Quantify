@@ -6,7 +6,6 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.layers import LSTM
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
-import yfinance as yf
 from . import StockPrices
 
 # Uses an LSTM model to forecast prices of a given stock
@@ -63,7 +62,7 @@ class LSTMForecaster:
         return np.array(dataX), np.array(dataY)
     
     # Analyzes quality of model, comparing the results of the training data and test data
-    def measureModelAccuracy(self):
+    def getModelAccuracy(self):
         trainPredicted = self.makeForecasts(self.trainX)
         testPredicted = self.makeForecasts(self.testX)
         
@@ -73,7 +72,22 @@ class LSTMForecaster:
         trainScore = self.computeError(trainPredicted, trainActual)
         testScore = self.computeError(testPredicted, testActual)
         
-        return trainScore, testScore
+        # Convert Numpy arrays to lists
+        newShape = (1, -1)
+        trainPredicted = self.getConvertedPrices(trainPredicted, newShape)
+        testPredicted = self.getConvertedPrices(testPredicted, newShape)
+        trainActual = self.getConvertedPrices(trainActual, newShape)
+        testActual = self.getConvertedPrices(testActual, newShape)
+        
+        # Creating a dictionary that provides information on the model's accuracy
+        modelAccuracy = dict({"trainPredicted": trainPredicted, "testPredicted": testPredicted, "trainActual": trainActual,
+                              "testActual": testActual, "scores": {"train": trainScore, "test": testScore}})
+        
+        return modelAccuracy
+    
+    # Converts numpy array to a list
+    def getConvertedPrices(self, prices, newShape):
+        return np.reshape(prices, newShape).tolist()
         
     def computeError(self, predicted, actual):
         return np.sqrt(mean_squared_error(actual[0], predicted[:,0]))

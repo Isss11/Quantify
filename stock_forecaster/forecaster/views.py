@@ -29,11 +29,11 @@ def lstmForecast(request):
     forecaster = LSTMForecaster.LSTMForecaster(requestValues["ticker"], requestValues["sampleStartDate"])
     forecaster.createModel(requestValues["lookBack"])
     
-    # print(forecaster.measureModelAccuracy())
-
+    # Getting prices and model accuracy details to include in response
     prices = forecaster.getCombinedPrices(requestValues['forecastLength'])
+    modelAccuracy = forecaster.getModelAccuracy()
     
-    response = dict(prices)
+    response = dict({"prices": prices, "modelAccuracy": modelAccuracy})
     
     return JsonResponse(response)
     
