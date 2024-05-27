@@ -1,12 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from . import ARIMAForecaster, StockDetail
+from . import ARIMAForecaster, LSTMForecaster, StockDetail
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework import status
-import json
-
 # Constructs a ARIMA model to forecast stock returns, using ML
 @api_view(['POST'])
 def arimaForecast(request):
@@ -25,7 +23,19 @@ def arimaForecast(request):
 
 @api_view(['POST'])
 def lstmForecast(request):
-    return JsonResponse(dict())
+    requestValues = JSONParser().parse(request)
+    
+    # Creating model with given look-back amount
+    forecaster = LSTMForecaster.LSTMForecaster(requestValues["ticker"], requestValues["sampleStartDate"])
+    forecaster.createModel(requestValues["lookBack"])
+    
+    # print(forecaster.measureModelAccuracy())
+
+    prices = forecaster.getCombinedPrices(requestValues['forecastLength'])
+    
+    response = dict(prices)
+    
+    return JsonResponse(response)
     
 
 # Returns general stock information used in the UI

@@ -1,22 +1,19 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.layers import LSTM
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
 import yfinance as yf
-from StockPrices import StockPrices
+from . import StockPrices
 
 # Uses an LSTM model to forecast prices of a given stock
 class LSTMForecaster:
     def __init__(self, ticker, sampleStartDate) -> None:
-        self.stock = StockPrices(ticker, sampleStartDate)
+        self.stock = StockPrices.StockPrices(ticker, sampleStartDate)
         self.scaler = MinMaxScaler(feature_range=(0, 1))
-        
-        print(self.stock.prices)
         
     # Creates LSTM Model
     def createModel(self, lookBack):
@@ -27,7 +24,6 @@ class LSTMForecaster:
         # Create training and test data for model evaluation
         # Actual predictions (indicated in the app's UI) will be for data beyond current date
         trainSize = int(len(self.normalizedPrices) * 0.7)
-        # testSize = len(self.normalizedPrices) - trainSize
         
         trainingData = self.normalizedPrices[0:trainSize,:]
         testData = self.normalizedPrices[trainSize:len(self.normalizedPrices),:]
@@ -84,21 +80,48 @@ class LSTMForecaster:
     
     # Develops Forecasts
     def makeForecasts(self, X):
-        print("Making forecasts with X")
-        print(X.shape)
-        print(X)
         predictions = self.model.predict(X)
         
         # Change predictions back to original units to calculate RMSE in original units
         return self.scaler.inverse_transform(predictions)
         
-    # For returning the final predictions, along with their actual values
-    def getCombinedPrices(self):
-        pass
+    # Obtains forecasted values, and combines them into a dictionary with the realized values
+    def getCombinedPrices(self, s):
+        realizedPrices = pd.DataFrame(self.stock.prices, columns=['date', 'adjClose'])
+                
+        # Obtain forecasts to also add in dictionary separately
+        forecasted = np.reshape(self.predictIntoFuture(s), (1, -1))[0]
+        forecastedDates = self.getDatesIntoFuture(s)
+        
+        # print(forecasted)
+        # print(forecastedDates)
+        
+        # Creating Data Frame to contain the predicted prices
+        forecastedPrices = pd.DataFrame({'date': forecastedDates, 'adjClose': forecasted})
+        
+        # Remove time from date columns
+        realizedPrices['date'] = realizedPrices['date'].dt.date
+        forecastedPrices['date'] = forecastedPrices['date'].dt.date
+        
+        # Organize data into a dictionary to be consumed
+        combinedPrices = {'realized': {'date': realizedPrices['date'].tolist(), 'prices': realizedPrices['adjClose'].tolist()},
+                        'forecasted': {'date': forecastedPrices['date'].tolist(), 'prices': forecastedPrices['adjClose'].tolist()}}
+        
+        return combinedPrices
+    
+    # Get dates so many days into the future
+    # TODO: Replace to consider actual trading days
+    def getDatesIntoFuture(self, s):
+        lastDate = self.stock.getFinalRealizedDate()
+        
+        dates = []
+        
+        for i in range(1, s + 1):
+            dates.append(lastDate + pd.DateOffset(days=i))
+        
+        return dates
     
     def predictIntoFuture(self, s):
-        predictionList = self.normalizedPrices[-self.lookBack:]
-
         # For forecasted values only
         predictedNormalizedPrices = []
 
@@ -128,8 +151,6 @@ class LSTMForecaster:
 if __name__ == "__main__":
     forecaster = LSTMForecaster("C", "2010-01-01")
     forecaster.createModel(8)
-    print(forecaster.measureModelAccuracy())
-
-    # Forecast in the future (beyond the training and sample data
-    print("Obtaining predictions")
-    print(forecaster.predictIntoFuture(20))
+    
+    # Getting forecasted values for 5 days ahead
+    print(forecaster.getCombinedPrices(5))

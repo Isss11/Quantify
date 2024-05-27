@@ -30,7 +30,7 @@ class StockPrices:
         
     # Get final date of recorded returns
     def getFinalRealizedDate(self):
-        return self.prices.iloc[len(self.prices) - 1]['date']
+        return self.prices['date'].values[-1]
     
     # Creates a row of normalized data, given a scaler
     def getNormalizedData(self, scaler):
