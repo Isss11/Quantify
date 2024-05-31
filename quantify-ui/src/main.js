@@ -9,7 +9,9 @@ import StockDetail from './components/StockDetail.vue';
 import ForecastedReturnsTable from './components/ForecastedReturnsTable.vue';
 import ReturnsGraph from './components/ReturnsGraph.vue';
 import ARIMADetails from './components/ARIMADetails.vue';
+// import PrimeVue from 'primevue/config';
 import './index.css'
+
 
 const app = createApp(App)
 
@@ -21,6 +23,11 @@ app.component('StockDetail', StockDetail);
 app.component('ForecastedReturnsTable', ForecastedReturnsTable);
 app.component('ReturnsGraph', ReturnsGraph);
 app.component('ARIMADetails', ARIMADetails);
+
 app.use(SimpleTypeahead);
+
+
+// PrimeVue registration
+// app.use(PrimeVue, { unstyled: true });
 
 const mountedApp = app.mount('#app')

@@ -1,21 +1,3 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@layer base {
-  * {
-    font-family: "Courier New", Courier, monospace;
-    background-color: #161613;
-    color: white;
-  }
-
-  header {
-    font-size: medium;
-    text-align: left;
-  }
-
-  h1 {
-    font-size: xx-large;
-    font-weight: 800;
-  }
-}

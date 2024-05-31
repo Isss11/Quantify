@@ -15,7 +15,7 @@ class LSTMForecaster:
         self.scaler = MinMaxScaler(feature_range=(0, 1))
         
     # Creates LSTM Model
-    def createModel(self, lookBack):
+    def createModel(self, lookBack, epochs, batchSize):
         self.lookBack = lookBack
         
         self.normalizedPrices = self.stock.getNormalizedData(self.scaler)
@@ -35,10 +35,9 @@ class LSTMForecaster:
         self.trainX = np.reshape(self.trainX, (self.trainX.shape[0], 1, self.trainX.shape[1]))
         self.testX = np.reshape(self.testX, (self.testX.shape[0], 1, self.testX.shape[1]))
         
-        # TODO, make the number of Epocs a parameter
-        self.model = self.getLSTM(self.trainX, self.trainY, 1)
+        self.model = self.getLSTM(self.trainX, self.trainY, epochs, batchSize)
         
-    def getLSTM(self, trainX, trainY, numEpochs):
+    def getLSTM(self, trainX, trainY, epochs, batchSize):
         model = Sequential()
         model.add(LSTM(4, input_shape=(1, self.lookBack)))
 
@@ -46,7 +45,7 @@ class LSTMForecaster:
         model.add(Dense(1))
 
         model.compile(loss='mean_squared_error', optimizer='adam')
-        model.fit(trainX, trainY, epochs=numEpochs, batch_size=1, verbose=2)
+        model.fit(trainX, trainY, epochs=epochs, batch_size=batchSize, verbose=2)
         
         return model
         
@@ -81,7 +80,7 @@ class LSTMForecaster:
         
         # Creating a dictionary that provides information on the model's accuracy
         modelAccuracy = dict({"trainPredicted": trainPredicted, "testPredicted": testPredicted, "trainActual": trainActual,
-                              "testActual": testActual, "scores": {"train": trainScore, "test": testScore}})
+                              "testActual": testActual, "scores": {"rsme" :{"train": trainScore, "test": testScore}}})
         
         return modelAccuracy
     
