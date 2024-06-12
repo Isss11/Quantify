@@ -6,9 +6,8 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 
 const props = defineProps({parameters: Object, details: Object, prices: Object});
 
-console.log({props})
-
 const getDataRealized = () => {
+
   return {
   labels: props.prices.realized.date,
   datasets: [

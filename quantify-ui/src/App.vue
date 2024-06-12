@@ -7,12 +7,9 @@ const modelDetails = ref('')
 const modelPrices = ref('');
 const modelAccuracy = ref('')
 const modelExists = ref(false);
-const ticker = ref('');
-const forecastPeriod = ref('');
-
 
 // Requests to forecast stock returns using an ARIMA model
-const handleRequestModel = (e, inputTicker, inputForecastPeriod, chosenModel, startDate) => {
+const handleRequestModel = (e, inputTicker, inputForecastPeriod, chosenModel, startDate, lookBack, epochs, batchSize) => {
   // ARIMA Model
   if (chosenModel === 'arima') {
     // axios.post("http://127.0.0.1:8000/arimaForecast/", {
@@ -32,32 +29,25 @@ const handleRequestModel = (e, inputTicker, inputForecastPeriod, chosenModel, st
     //   .catch(e => alert(e))
   } else {
     axios.post("http://127.0.0.1:8000/lstmForecast/", {
-      ticker: "NVDA",
-      forecastLength: 5,
-      sampleStartDate: "2010-01-01",
+      ticker: inputTicker,
+      forecastLength: inputForecastPeriod,
+      sampleStartDate: startDate,
       lookBack: 8,
       epochs: 3,
       batchSize: 1
     })
     .then(response => {
-
-      console.log('response.data', response.data);
-
       modelParameters.value = response.data.parameters,
       modelDetails.value = response.data.details,
       modelPrices.value = response.data.prices
       modelAccuracy.value = response.data.modelAccuracy
 
       // Indicate that the model exists to show the model display
-
-      console.log({modelParameters})
       modelExists.value = true;
     })
   }
 }
 </script>
-
-// TODO: re-do model to work with ML model only, revise with ARIMA model later.
 
 <template>
   <header>

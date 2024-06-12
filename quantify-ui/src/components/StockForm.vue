@@ -8,10 +8,14 @@ const forecastPeriod = ref('')
 const stockDetails = ref({})
 const chosenModel = ref('')
 const startDate = ref('2010-01-01')
+const lookBack = ref('')
+const epochs = ref('')
+const batchSize = ref('')
+
 const emit = defineEmits(['request-model'])
 
 const handleSubmit = (e) => {
-    emit('request-model', e, ticker.value, forecastPeriod.value, chosenModel.value, startDate.value)
+    emit('request-model', e, ticker.value, forecastPeriod.value, chosenModel.value, startDate.value, lookBack.value, epochs.value, batchSize.value)
 }
 
 const handleChange = (e) => {
@@ -34,10 +38,8 @@ const handleChange = (e) => {
             @onInput="handleChange"
             :minInputLength="1"
         />
+        <StockDetail :ticker="ticker" :companyName="stockDetails.name" :price="stockDetails.price" :currency="stockDetails.currency"/>
 
-        <input type="date" v-model="startDate" id="startDate" name="startDate"/>
-        <input type="number" min="1" v-model="forecastPeriod" placeholder="Forecast Period"/>
-        <StockDetail :ticker="ticker" :companyName="stockDetails.name" :price="stockDetails.price" :currency="stockDetails.currency"</StockDetail>
 
         <div>
             <label for="modelType">Model Type</label>
@@ -48,6 +50,11 @@ const handleChange = (e) => {
                 <input id="lstm" type="radio" v-model="chosenModel" value="lstm"/>
             </div>  
         </div>
+        <input type="date" v-model="startDate" id="startDate" name="startDate"/>
+        <input type="number" min="1" v-model="forecastPeriod" placeholder="Forecast Period"/>
+        <input type="number" min="1" v-model="lookBack" placeholder="Lookback"/>
+        <input type="number" min="1" v-model="epochs" placeholder="Epochs"/>
+        <input type="number" min="1" v-model="batchSize" placeholder="Batch Size"/>
 
         <button>Forecast</button>
 
