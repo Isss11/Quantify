@@ -16,7 +16,7 @@ cd quantify-ui
 npm install
 ```
 
-2. Run the front-end application.
+2. Run the front-end application on **Google Chrome**.
 
 ```
 npm run dev

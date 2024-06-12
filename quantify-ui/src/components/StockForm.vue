@@ -44,8 +44,8 @@ const handleChange = (e) => {
             <div id="modelType">
                 <label for="arima">ARIMA</label>
                 <input id="arima" type="radio" v-model="chosenModel" value="arima"/>
-                <label for="ml">ML</label>
-                <input id="ml" type="radio" v-model="chosenModel" value="ml"/>
+                <label for="lstm">LSTM</label>
+                <input id="lstm" type="radio" v-model="chosenModel" value="lstm"/>
             </div>  
         </div>
 

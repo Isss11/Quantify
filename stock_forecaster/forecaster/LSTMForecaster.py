@@ -80,9 +80,11 @@ class LSTMForecaster:
         
         # Creating a dictionary that provides information on the model's accuracy
         modelAccuracy = dict({"trainPredicted": trainPredicted, "testPredicted": testPredicted, "trainActual": trainActual,
-                              "testActual": testActual, "scores": {"rsme" :{"train": trainScore, "test": testScore}}})
+                              "testActual": testActual})
         
-        return modelAccuracy
+        modelDetails = {"rsme" :{"train": trainScore, "test": testScore}}
+        
+        return modelAccuracy, modelDetails
     
     # Converts numpy array to a list
     def getConvertedPrices(self, prices, newShape):

@@ -31,10 +31,10 @@ def lstmForecast(request):
     
     # Getting prices and model accuracy details to include in response
     prices = forecaster.getCombinedPrices(requestValues['forecastLength'])
-    modelAccuracy = forecaster.getModelAccuracy()
-    modelParameters = {"lookBack": requestValues["lookBack"], "epochs": requestValues["epochs"], "batchSize": requestValues["batchSize"]}
+    modelAccuracy, modelDetails = forecaster.getModelAccuracy()
+    modelParameters = {"modelType": "LSTM", "stock": requestValues["ticker"], "forecastLength": requestValues["forecastLength"], "lookBack": requestValues["lookBack"], "epochs": requestValues["epochs"], "batchSize": requestValues["batchSize"]}
     
-    response = dict({"parameters": modelParameters, "prices": prices, "modelAccuracy": modelAccuracy})
+    response = dict({"parameters": modelParameters, "details": modelDetails, "prices": prices, "modelAccuracy": modelAccuracy})
     
     return JsonResponse(response)
     

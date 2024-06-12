@@ -2,7 +2,10 @@
 import axios from 'axios';
 import { ref } from 'vue';
 
-const modelReturns = ref();
+const modelParameters = ref('')
+const modelDetails = ref('')
+const modelPrices = ref('');
+const modelAccuracy = ref('')
 const modelExists = ref(false);
 const ticker = ref('');
 const forecastPeriod = ref('');
@@ -12,33 +15,56 @@ const forecastPeriod = ref('');
 const handleRequestModel = (e, inputTicker, inputForecastPeriod, chosenModel, startDate) => {
   // ARIMA Model
   if (chosenModel === 'arima') {
-    axios.post("http://127.0.0.1:8000/arimaForecast/", {
-      ticker: inputTicker, 
-      forecastLength: inputForecastPeriod,
-      sampleStartDate: startDate
-    })
-      .then(response => {
-        // An empty object is truthy, so boolean ref was created to denote whether the model information component should be rendered or not
-        modelReturns.value = response.data;
-        modelExists.value = true;
-        ticker.value = inputTicker;
-        forecastPeriod.value = inputForecastPeriod;
+    // axios.post("http://127.0.0.1:8000/arimaForecast/", {
+    //   ticker: inputTicker, 
+    //   forecastLength: inputForecastPeriod,
+    //   sampleStartDate: startDate
+    // })
+    //   .then(response => {
+    //     // An empty object is truthy, so boolean ref was created to denote whether the model information component should be rendered or not
+    //     modelReturns.value = response.data;
+    //     modelExists.value = true;
+    //     ticker.value = inputTicker;
+    //     forecastPeriod.value = inputForecastPeriod;
 
-        console.log("Realized and Forecasted Values (ARIMA): ", modelReturns.value);
-      })
-      .catch(e => alert(e))
-    // TODO: ML Model
+    //     console.log("Realized and Forecasted Values (ARIMA): ", modelReturns.value);
+    //   })
+    //   .catch(e => alert(e))
+  } else {
+    axios.post("http://127.0.0.1:8000/lstmForecast/", {
+      ticker: "NVDA",
+      forecastLength: 5,
+      sampleStartDate: "2010-01-01",
+      lookBack: 8,
+      epochs: 3,
+      batchSize: 1
+    })
+    .then(response => {
+
+      console.log('response.data', response.data);
+
+      modelParameters.value = response.data.parameters,
+      modelDetails.value = response.data.details,
+      modelPrices.value = response.data.prices
+      modelAccuracy.value = response.data.modelAccuracy
+
+      // Indicate that the model exists to show the model display
+
+      console.log({modelParameters})
+      modelExists.value = true;
+    })
   }
 }
 </script>
+
+// TODO: re-do model to work with ML model only, revise with ARIMA model later.
 
 <template>
   <header>
     <NavHeader />
   </header>
-
   <main>
     <StockForm @request-model="handleRequestModel" />
-    <Model v-if="modelExists" :returns="modelReturns" :ticker="ticker" :forecastLength="forecastPeriod" />
+    <Model v-if="modelExists" :parameters="modelParameters" :details="modelDetails" :prices="modelPrices" :accuracy="modelAccuracy"/>
   </main>
 </template>

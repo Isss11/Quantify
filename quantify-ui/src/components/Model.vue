@@ -1,10 +1,11 @@
 <script setup>
-const props = defineProps(['returns', 'ticker', 'forecastLength'])
+const props = defineProps({parameters: Object, details: Object, prices: Object, accuracy: Object})
+
+console.log('props value', props.parameters);
+
 </script>
 
 <template>
-    <h2 >Model</h2>
-    <ARIMADetails :modelDetails="props.returns.modelDetails" />
-    <ReturnsGraph :realized="props.returns.realized" :forecasted="props.returns.forecasted" :ticker="props.ticker"
-        :forecastLength="props.forecastLength" />
+    <h2>Model</h2>
+    <StockPriceGraph :parameters="parameters" :details="details" :prices="prices"/>
 </template>
