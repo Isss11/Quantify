@@ -10,9 +10,10 @@ import ForecastedReturnsTable from './components/ForecastedReturnsTable.vue';
 import ReturnsGraph from './components/ReturnsGraph.vue';
 import ARIMADetails from './components/ARIMADetails.vue';
 import StockPriceGraph from './components/StockPriceGraph.vue'
-// import PrimeVue from 'primevue/config';
-import './index.css'
-
+import PrimeVue from 'primevue/config';
+import Aura from '@primevue/themes/aura';
+import SelectButton from 'primevue/selectbutton';
+import Button from 'primevue/button';
 
 const app = createApp(App)
 
@@ -27,9 +28,13 @@ app.component('ARIMADetails', ARIMADetails);
 app.component('StockPriceGraph', StockPriceGraph);
 
 app.use(SimpleTypeahead);
+app.use(PrimeVue, {
+    theme: {
+        preset: Aura
+    }
+});
 
-
-// PrimeVue registration
-// app.use(PrimeVue, { unstyled: true });
+app.component('SelectButton', SelectButton);
+app.component('PrimeButton', Button);3
 
 const mountedApp = app.mount('#app')

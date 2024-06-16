@@ -2,15 +2,17 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import validTickers from '../assets/validTickers';
+import SelectButton from 'primevue/selectbutton';
 
 const ticker = ref('')
 const forecastPeriod = ref('')
 const stockDetails = ref({})
-const chosenModel = ref('')
+const chosenModel = ref('ARIMA')
 const startDate = ref('2010-01-01')
 const lookBack = ref('')
 const epochs = ref('')
 const batchSize = ref('')
+const modelOptions = ref(['ARIMA', 'LSTM'])
 
 const emit = defineEmits(['request-model'])
 
@@ -41,15 +43,9 @@ const handleChange = (e) => {
         <StockDetail :ticker="ticker" :companyName="stockDetails.name" :price="stockDetails.price" :currency="stockDetails.currency"/>
 
 
-        <div>
-            <label for="modelType">Model Type</label>
-            <div id="modelType">
-                <label for="arima">ARIMA</label>
-                <input id="arima" type="radio" v-model="chosenModel" value="arima"/>
-                <label for="lstm">LSTM</label>
-                <input id="lstm" type="radio" v-model="chosenModel" value="lstm"/>
-            </div>  
-        </div>
+
+        <SelectButton v-model="chosenModel" :options="modelOptions"/>
+
         <input type="date" v-model="startDate" id="startDate" name="startDate"/>
         <input type="number" min="1" v-model="forecastPeriod" placeholder="Forecast Period"/>
         <input type="number" min="1" v-model="lookBack" placeholder="Lookback"/>

@@ -11,7 +11,7 @@ const getDataRealized = () => {
   labels: getCombinedDates(),
   datasets: [
     {
-      label: "Adjusted Close Prices ('Realized')",
+      label: "Adjusted Close Prices",
       backgroundColor: getPointColours(),
       data: getCombinedPrices(),
     },
