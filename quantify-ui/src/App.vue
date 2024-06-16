@@ -1,6 +1,7 @@
 <script setup>
 import axios from 'axios';
 import { ref } from 'vue';
+import '../styles/app.css'
 
 const modelParameters = ref('')
 const modelDetails = ref('')
@@ -53,8 +54,12 @@ const handleRequestModel = (e, inputTicker, inputForecastPeriod, chosenModel, st
   <header>
     <NavHeader />
   </header>
-  <main>
-    <StockForm @request-model="handleRequestModel" />
-    <Model v-if="modelExists" :parameters="modelParameters" :details="modelDetails" :prices="modelPrices" :accuracy="modelAccuracy"/>
+  <main class="main-panel">
+      <div class="form-column">
+        <StockForm @request-model="handleRequestModel" />
+      </div>
+      <div class="model-graph-column">
+        <Model v-if="modelExists" :parameters="modelParameters" :details="modelDetails" :prices="modelPrices" :accuracy="modelAccuracy"/>
+      </div>
   </main>
 </template>

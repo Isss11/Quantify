@@ -6,6 +6,6 @@ console.log('props value', props.parameters);
 </script>
 
 <template>
-    <h2>Model</h2>
     <StockPriceGraph :parameters="parameters" :details="details" :prices="prices"/>
+    <h2>Model</h2>
 </template>

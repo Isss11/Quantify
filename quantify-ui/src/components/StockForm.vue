@@ -2,17 +2,15 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import validTickers from '../assets/validTickers';
-import SelectButton from 'primevue/selectbutton';
-import InputNumber from 'primevue/inputnumber';
 
 const ticker = ref('')
-const forecastPeriod = ref('')
+const forecastPeriod = ref(null)
 const stockDetails = ref({})
 const chosenModel = ref('ARIMA')
 const startDate = ref('2010-01-01')
-const lookBack = ref('')
-const epochs = ref('')
-const batchSize = ref('')
+const lookBack = ref(null)
+const epochs = ref(null)
+const batchSize = ref(null)
 const modelOptions = ref(['ARIMA', 'LSTM'])
 
 const emit = defineEmits(['request-model'])
@@ -33,7 +31,9 @@ const handleChange = (e) => {
 
 <template>
     <h2>Enter Stock Information</h2>
-    <form @submit.prevent="handleSubmit">
+
+
+    <form>
         <vue3-simple-typeahead
             id="tickerSelector"
             placeholder="Stock Ticker"
@@ -46,12 +46,22 @@ const handleChange = (e) => {
 
         <SelectButton v-model="chosenModel" :options="modelOptions"/>
         <DatePicker v-model="startDate"/>
-        <InputNumber :min="1" v-model="forecastPeriod" placeholder="Forecast Period"/>
-        <InputNumber :min="1" v-model="lookBack" placeholder="Lookback"/>
-        <InputNumber :min="1" v-model="epochs" placeholder="Epochs"/>
-        <InputNumber :min="1" v-model="batchSize" placeholder="Batch Size"/>
 
-        <PrimeButton label="Forecast"/>
+        <label for="forecastInput">Forecast Length</label>
+        <InputNumber id="forecastInput" :min="1" v-model="forecastPeriod"/>
+
+        <div v-if="chosenModel === 'LSTM'">
+        <Divider/>
+        <h4>LSTM Parameters</h4>
+        <label for="lookBackLength">Look Back Length</label>
+        <InputNumber id="lookbackLength" :min="1" :max="30" v-model="lookBack"/>
+        <label for="epochsInput">Epochs</label>
+        <InputNumber id="epochsInput" :min="1" :max="5" v-model="epochs"/>
+        <label for="batchSizeInput">Batch Size</label>
+        <InputNumber id="batchSizeInput" :min="1" :max="30" v-model="batchSize"/>
+        </div>
+
+        <PrimeButton label="Forecast" @click="handleSubmit"/>
 
     </form>
 </template>

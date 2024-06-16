@@ -1,0 +1,13 @@
+.main-panel {
+    display: flex;
+}
+
+.form-column {
+    width: 20%;
+    min-width: 4rem;  
+}
+
+.model-graph-column {
+    width: 80%;
+    padding: 0.5rem;
+}

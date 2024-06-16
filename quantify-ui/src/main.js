@@ -15,6 +15,7 @@ import Aura from '@primevue/themes/aura';
 import SelectButton from 'primevue/selectbutton';
 import DatePicker from 'primevue/datepicker'
 import InputNumber from 'primevue/inputnumber'
+import Divider from 'primevue/divider';
 import Button from 'primevue/button';
 
 const app = createApp(App)
@@ -40,5 +41,6 @@ app.component('SelectButton', SelectButton);
 app.component('PrimeButton', Button);
 app.component('DatePicker', DatePicker)
 app.component('InputNumber', InputNumber)
+app.component('Divider', Divider)
 
 app.mount('#app')
