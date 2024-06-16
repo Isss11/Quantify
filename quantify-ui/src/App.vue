@@ -8,9 +8,14 @@ const modelDetails = ref('')
 const modelPrices = ref('');
 const modelAccuracy = ref('')
 const modelExists = ref(false);
+const loadingModel = ref(false)
 
 // Requests to forecast stock returns using an ARIMA model
 const handleRequestModel = (e, inputTicker, inputForecastPeriod, chosenModel, startDate, lookBack, epochs, batchSize) => {
+  loadingModel.value = true
+
+  console.log('Loading model.')
+
   // ARIMA Model
   if (chosenModel === 'arima') {
     // axios.post("http://127.0.0.1:8000/arimaForecast/", {
@@ -45,8 +50,13 @@ const handleRequestModel = (e, inputTicker, inputForecastPeriod, chosenModel, st
 
       // Indicate that the model exists to show the model display
       modelExists.value = true;
+
+      console.log('Finished loading model')
+      loadingModel.value = false
     })
   }
+
+  
 }
 </script>
 
@@ -54,12 +64,14 @@ const handleRequestModel = (e, inputTicker, inputForecastPeriod, chosenModel, st
   <header>
     <NavHeader />
   </header>
+  
   <main class="main-panel">
       <div class="form-column">
         <StockForm @request-model="handleRequestModel" />
       </div>
       <div class="model-graph-column">
-        <Model v-if="modelExists" :parameters="modelParameters" :details="modelDetails" :prices="modelPrices" :accuracy="modelAccuracy"/>
+        <ProgressSpinner v-if="loadingModel"/>
+        <Model v-if="modelExists && !loadingModel" :parameters="modelParameters" :details="modelDetails" :prices="modelPrices" :accuracy="modelAccuracy"/>
       </div>
   </main>
 </template>

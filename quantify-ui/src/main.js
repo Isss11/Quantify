@@ -17,6 +17,7 @@ import DatePicker from 'primevue/datepicker'
 import InputNumber from 'primevue/inputnumber'
 import Divider from 'primevue/divider';
 import Button from 'primevue/button';
+import ProgressSpinner from 'primevue/progressspinner';
 
 const app = createApp(App)
 
@@ -42,5 +43,6 @@ app.component('PrimeButton', Button);
 app.component('DatePicker', DatePicker)
 app.component('InputNumber', InputNumber)
 app.component('Divider', Divider)
+app.component('ProgressSpinner', ProgressSpinner)
 
 app.mount('#app')
