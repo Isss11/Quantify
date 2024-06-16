@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import axios from 'axios';
 import validTickers from '../assets/validTickers';
 import SelectButton from 'primevue/selectbutton';
+import InputNumber from 'primevue/inputnumber';
 
 const ticker = ref('')
 const forecastPeriod = ref('')
@@ -40,19 +41,17 @@ const handleChange = (e) => {
             @onInput="handleChange"
             :minInputLength="1"
         />
+
         <StockDetail :ticker="ticker" :companyName="stockDetails.name" :price="stockDetails.price" :currency="stockDetails.currency"/>
 
-
-
         <SelectButton v-model="chosenModel" :options="modelOptions"/>
+        <DatePicker v-model="startDate"/>
+        <InputNumber :min="1" v-model="forecastPeriod" placeholder="Forecast Period"/>
+        <InputNumber :min="1" v-model="lookBack" placeholder="Lookback"/>
+        <InputNumber :min="1" v-model="epochs" placeholder="Epochs"/>
+        <InputNumber :min="1" v-model="batchSize" placeholder="Batch Size"/>
 
-        <input type="date" v-model="startDate" id="startDate" name="startDate"/>
-        <input type="number" min="1" v-model="forecastPeriod" placeholder="Forecast Period"/>
-        <input type="number" min="1" v-model="lookBack" placeholder="Lookback"/>
-        <input type="number" min="1" v-model="epochs" placeholder="Epochs"/>
-        <input type="number" min="1" v-model="batchSize" placeholder="Batch Size"/>
-
-        <button>Forecast</button>
+        <PrimeButton label="Forecast"/>
 
     </form>
 </template>

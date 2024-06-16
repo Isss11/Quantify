@@ -13,6 +13,8 @@ import StockPriceGraph from './components/StockPriceGraph.vue'
 import PrimeVue from 'primevue/config';
 import Aura from '@primevue/themes/aura';
 import SelectButton from 'primevue/selectbutton';
+import DatePicker from 'primevue/datepicker'
+import InputNumber from 'primevue/inputnumber'
 import Button from 'primevue/button';
 
 const app = createApp(App)
@@ -35,6 +37,8 @@ app.use(PrimeVue, {
 });
 
 app.component('SelectButton', SelectButton);
-app.component('PrimeButton', Button);3
+app.component('PrimeButton', Button);
+app.component('DatePicker', DatePicker)
+app.component('InputNumber', InputNumber)
 
-const mountedApp = app.mount('#app')
+app.mount('#app')
