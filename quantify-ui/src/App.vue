@@ -1,7 +1,6 @@
 <script setup>
 import axios from 'axios';
 import { ref } from 'vue';
-import '../styles/app.css'
 
 const modelParameters = ref('')
 const modelDetails = ref('')
@@ -65,13 +64,15 @@ const handleRequestModel = (e, inputTicker, inputForecastPeriod, chosenModel, st
     <NavHeader />
   </header>
   
-  <main class="main-panel">
-      <div class="form-column">
-        <StockForm @request-model="handleRequestModel" />
-      </div>
-      <div class="model-graph-column">
-        <ProgressSpinner v-if="loadingModel"/>
-        <Model v-if="modelExists && !loadingModel" :parameters="modelParameters" :details="modelDetails" :prices="modelPrices" :accuracy="modelAccuracy"/>
-      </div>
+  <main>
+      <Splitter>
+        <SplitterPanel :size="25">
+          <StockForm @request-model="handleRequestModel" />
+        </SplitterPanel>
+        <SplitterPanel :size="75">
+          <ProgressSpinner v-if="loadingModel"/>
+          <Model v-if="modelExists && !loadingModel" :parameters="modelParameters" :details="modelDetails" :prices="modelPrices" :accuracy="modelAccuracy"/>
+        </SplitterPanel>
+      </Splitter>
   </main>
 </template>

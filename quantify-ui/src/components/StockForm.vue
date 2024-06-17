@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import validTickers from '../assets/validTickers';
+import AutoComplete from 'primevue/autocomplete';
 
 const ticker = ref('')
 const forecastPeriod = ref(null)
@@ -27,11 +28,13 @@ const handleChange = (e) => {
     })
     .catch(e => console.log("Stock not available for forecasting."))
 }
+
 </script>
 
 <template>
     <h2>Enter Stock Information</h2>
     <form>
+        <label for="tickerSelector">Stock</label>
         <vue3-simple-typeahead
             id="tickerSelector"
             placeholder="Stock Ticker"
@@ -39,9 +42,12 @@ const handleChange = (e) => {
             @onInput="handleChange"
             :minInputLength="1"
         />
+
         <StockDetail :ticker="ticker" :companyName="stockDetails.name" :price="stockDetails.price" :currency="stockDetails.currency"/>
-        <SelectButton v-model="chosenModel" :options="modelOptions"/>
-        <DatePicker v-model="startDate"/>
+        <label for="modelInput">Forecasting Model</label>
+        <SelectButton id="modelInput" v-model="chosenModel" :options="modelOptions"/>
+        <label for="dateInput">Data Start Date</label>
+        <DatePicker id="dateInput" v-model="startDate"/>
         <label for="forecastInput">Forecast Length</label>
         <InputNumber id="forecastInput" :min="1" v-model="forecastPeriod"/>
         <div v-if="chosenModel === 'LSTM'">

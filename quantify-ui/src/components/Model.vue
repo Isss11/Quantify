@@ -7,5 +7,4 @@ console.log('props value', props.parameters);
 
 <template>
     <StockPriceGraph :parameters="parameters" :details="details" :prices="prices"/>
-    <h2>Model</h2>
 </template>

@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import '../styles/app.css'
 import SimpleTypeahead from 'vue3-simple-typeahead';
 import 'vue3-simple-typeahead/dist/vue3-simple-typeahead.css';
 import NavHeader from './components/NavHeader.vue'
@@ -18,6 +19,8 @@ import InputNumber from 'primevue/inputnumber'
 import Divider from 'primevue/divider';
 import Button from 'primevue/button';
 import ProgressSpinner from 'primevue/progressspinner';
+import Splitter from 'primevue/splitter';
+import SplitterPanel from 'primevue/splitterpanel';
 
 const app = createApp(App)
 
@@ -44,5 +47,7 @@ app.component('DatePicker', DatePicker)
 app.component('InputNumber', InputNumber)
 app.component('Divider', Divider)
 app.component('ProgressSpinner', ProgressSpinner)
+app.component('Splitter', Splitter)
+app.component('SplitterPanel', SplitterPanel)
 
 app.mount('#app')
