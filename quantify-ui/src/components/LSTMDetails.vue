@@ -10,8 +10,7 @@ const adjustedDetails = computed(() => {
 </script>
 
 <template>
-    <h2>Model</h2>
-    <h3>Details</h3>
+    <h2>Model Details</h2>
     <h3>Accuracy (RSME)</h3>
 
 

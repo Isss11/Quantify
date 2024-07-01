@@ -31,7 +31,7 @@ const handleChange = (e) => {
 </script>
 
 <template>
-    <h2>Stock Information</h2>
+    <h2 class="secondary-header">Stock Information</h2>
     <form>
         <label for="tickerSelector">Stock</label>
         <vue3-simple-typeahead
@@ -73,7 +73,7 @@ const handleChange = (e) => {
             </div>
         </div>
 
-        <PrimeButton label="Forecast" @click="handleSubmit"/>
+        <PrimeButton class="forecast-button" label="Forecast" @click="handleSubmit"/>
 
     </form>
 </template>
@@ -81,5 +81,9 @@ const handleChange = (e) => {
 <style scoped>
 .form-input {
     display: block;
+}
+
+.forecast-button {
+    margin-top: 0.5rem;
 }
 </style>
