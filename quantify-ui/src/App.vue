@@ -1,6 +1,7 @@
 <script setup>
 import axios from 'axios';
 import { ref } from 'vue';
+import LSTMDetails from './components/LSTMDetails.vue';
 
 const modelParameters = ref('')
 const modelDetails = ref('')
@@ -71,8 +72,9 @@ const handleRequestModel = (e, inputTicker, inputForecastPeriod, chosenModel, st
         </SplitterPanel>
         <SplitterPanel :size="75">
           <ProgressSpinner v-if="loadingModel"/>
-          <Model v-if="modelExists && !loadingModel" :parameters="modelParameters" :details="modelDetails" :prices="modelPrices" :accuracy="modelAccuracy"/>
+          <StockPriceGraph v-if="modelExists && !loadingModel" :parameters="modelParameters" :prices="modelPrices"/>  
         </SplitterPanel>
       </Splitter>
+      <LSTMDetails v-if="modelExists && !loadingModel && modelParameters?.modelType === 'LSTM'" :details="modelDetails" :parameters="modelParameters"/>
   </main>
 </template>

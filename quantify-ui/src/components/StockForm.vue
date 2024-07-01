@@ -32,7 +32,7 @@ const handleChange = (e) => {
 </script>
 
 <template>
-    <h2>Enter Stock Information</h2>
+    <h2>Stock Information</h2>
     <form>
         <label for="tickerSelector">Stock</label>
         <vue3-simple-typeahead
