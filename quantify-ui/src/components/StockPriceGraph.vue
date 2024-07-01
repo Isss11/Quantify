@@ -5,7 +5,7 @@ import { ref } from 'vue';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip,Legend)
 
-const props = defineProps({parameters: Object, prices: Object});
+const props = defineProps(['parameters', 'prices']);
 const graphChoice = ref('All Prices')
 const graphOptions = ref(['All Prices', 'Historical', 'Forecasted'])
 const realizedColour = '#23cbed'

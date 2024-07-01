@@ -1,7 +1,12 @@
 <script setup>
 import { computed } from 'vue';
 
-const props = defineProps({details: Object, parameters: Object})
+const props = defineProps(['details', 'parameters'])
+const adjustedDetails = computed(() => {
+    const adjustedDetails = {'rsme': {'train': Number(props.details.rsme.train.toFixed(2)), 'test': Number(props.details.rsme.test.toFixed(2))}}
+
+    return adjustedDetails
+})
 </script>
 
 <template>
@@ -10,7 +15,7 @@ const props = defineProps({details: Object, parameters: Object})
     <h3>Accuracy (RSME)</h3>
 
 
-    <DataTable :value="details">
+    <DataTable :value="adjustedDetails">
         <Column field="train" header="Train"></Column>
         <Column field="test" header="Test"></Column>
     </DataTable>
