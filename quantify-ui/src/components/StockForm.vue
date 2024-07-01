@@ -33,7 +33,6 @@ const handleChange = (e) => {
 <template>
     <h2>Stock Information</h2>
     <form>
-        <FloatLabel>
         <label for="tickerSelector">Stock</label>
         <vue3-simple-typeahead
             id="tickerSelector"
@@ -42,40 +41,45 @@ const handleChange = (e) => {
             @onInput="handleChange"
             :minInputLength="1"
         />
-        </FloatLabel>
 
         <StockDetail :ticker="ticker" :companyName="stockDetails.name" :price="stockDetails.price" :currency="stockDetails.currency"/>
 
-        <FloatLabel>
         <label for="modelInput">Forecasting Model</label>
-        <SelectButton id="modelInput" v-model="chosenModel" :options="modelOptions"/>
-        </FloatLabel>
-        <FloatLabel>
-            <label for="dateInput">Data Start Date</label>
-            <DatePicker id="dateInput"  v-model="startDate"/>
-        </FloatLabel>
-        <FloatLabel>
-            <label for="forecastInput">Forecast Length</label>
-            <InputNumber id="forecastInput"  :min="1" v-model="forecastPeriod"/>
-        </FloatLabel>
+        <div>
+            <SelectButton id="modelInput" v-model="chosenModel" :options="modelOptions"/>
+        </div>
+        <label for="dateInput">Data Start Date</label>
+        <div>
+            <DatePicker id="dateInput" v-model="startDate"/>
+        </div>
+        <label for="forecastInput">Forecast Length</label>
+        <div>
+            <InputNumber id="forecastInput" :min="1" v-model="forecastPeriod"/> 
+        </div>
         <div v-if="chosenModel === 'LSTM'">
             <Divider/>
             <h4>LSTM Parameters</h4>
-            <FloatLabel >
-                <label for="lookBackLength">Look Back Length</label>
-                <InputNumber  id="lookbackLength"  :min="1" :max="30" v-model="lookBack"/>
-            </FloatLabel>
-            <FloatLabel>
-                <label for="epochsInput">Epochs</label>
+            <label for="lookBackLength">Look Back Length</label>
+            <div>
+                <InputNumber  id="lookbackLength" :min="1" :max="30" v-model="lookBack"/>
+            </div>
+            <label for="epochsInput">Epochs</label>
+            <div>
                 <InputNumber id="epochsInput"  :min="1" :max="5" v-model="epochs"/>
-            </FloatLabel>
-            <FloatLabel>
-                <label for="batchSizeInput">Batch Size</label>
+            </div>
+            <label for="batchSizeInput">Batch Size</label>
+            <div>
                 <InputNumber id="batchSizeInput"  :min="1" :max="30" v-model="batchSize"/>
-            </FloatLabel>
+            </div>
         </div>
 
         <PrimeButton label="Forecast" @click="handleSubmit"/>
 
     </form>
 </template>
+
+<style scoped>
+.form-input {
+    display: block;
+}
+</style>

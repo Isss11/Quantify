@@ -38,6 +38,7 @@ const handleRequestModel = (e, inputTicker, inputForecastPeriod, chosenModel, st
       ticker: inputTicker,
       forecastLength: inputForecastPeriod,
       sampleStartDate: startDate,
+      // TODO: Change to actual parameters
       lookBack: 8,
       epochs: 3,
       batchSize: 1
