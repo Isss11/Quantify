@@ -23,6 +23,8 @@ import Splitter from 'primevue/splitter';
 import SplitterPanel from 'primevue/splitterpanel';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
+import FloatLabel from 'primevue/floatlabel';
+import { definePreset } from '@primevue/themes';
 
 const app = createApp(App)
 
@@ -37,9 +39,28 @@ app.component('ARIMADetails', ARIMADetails);
 app.component('StockPriceGraph', StockPriceGraph);
 
 app.use(SimpleTypeahead);
+
+const MyPreset = definePreset(Lara, {
+    semantic: {
+        primary: {
+            50: '{yellow.50}',
+            100: '{yellow.100}',
+            200: '{yellow.200}',
+            300: '{yellow.300}',
+            400: '{yellow.400}',
+            500: '{yellow.500}',
+            600: '{yellow.600}',
+            700: '{yellow.700}',
+            800: '{yellow.800}',
+            900: '{yellow.900}',
+            950: '{yellow.950}'
+        }
+    }
+});
+
 app.use(PrimeVue, {
     theme: {
-        preset: Lara
+        preset: MyPreset
     }
 });
 
@@ -53,5 +74,6 @@ app.component('Splitter', Splitter)
 app.component('SplitterPanel', SplitterPanel)
 app.component('DataTable', DataTable)
 app.component('Column', Column)
+app.component('FloatLabel', FloatLabel)
 
 app.mount('#app')

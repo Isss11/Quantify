@@ -66,15 +66,33 @@ const handleRequestModel = (e, inputTicker, inputForecastPeriod, chosenModel, st
   </header>
   
   <main>
-      <Splitter>
-        <SplitterPanel :size="25">
+      <div class="main-panel">
+        <div class="stock-form">
           <StockForm @request-model="handleRequestModel" />
-        </SplitterPanel>
-        <SplitterPanel :size="75">
+        </div>
+        <div class="stock-graph">
           <ProgressSpinner v-if="loadingModel"/>
-          <StockPriceGraph v-if="modelExists && !loadingModel" :parameters="modelParameters" :prices="modelPrices"/>  
-        </SplitterPanel>
-      </Splitter>
+          <StockPriceGraph v-if="modelExists && !loadingModel" :parameters="modelParameters" :prices="modelPrices"/>
+        </div>
+      </div>
       <LSTMDetails v-if="modelExists && !loadingModel && modelParameters?.modelType === 'LSTM'" :details="modelDetails" :parameters="modelParameters"/>
   </main>
 </template>
+
+<style scoped>
+.main-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.5rem 0;
+  flex-wrap: wrap;
+}
+
+.stock-form {
+  width: 30%;
+}
+
+.stock-graph {
+  width: 60%;
+}
+</style>

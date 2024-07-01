@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 const props = defineProps(['details', 'parameters'])
 const adjustedDetails = computed(() => {
-    const adjustedDetails = {'rsme': {'train': Number(props.details.rsme.train.toFixed(2)), 'test': Number(props.details.rsme.test.toFixed(2))}}
+    const adjustedDetails = [{'train': Number(props.details.rsme.train.toFixed(2)), 'test': Number(props.details.rsme.test.toFixed(2))}]
 
     return adjustedDetails
 })
