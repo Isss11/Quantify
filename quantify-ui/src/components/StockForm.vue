@@ -46,7 +46,7 @@ const handleChange = (e) => {
 
         <label for="modelInput">Forecasting Model</label>
         <div>
-            <SelectButton id="modelInput" v-model="chosenModel" :options="modelOptions"/>
+            <SelectButton disabled="true" id="modelInput" v-model="chosenModel" :options="modelOptions"/>
         </div>
         <label for="dateInput">Data Start Date</label>
         <div>

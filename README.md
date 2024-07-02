@@ -1,6 +1,16 @@
 # Quantify
 
-_This project is currently being worked on_.
+This is full-stack web application that leverages a Recurrent Neural Network (LSTM model) to forecast future stock prices.
+While it is difficult to forecast stock prices in order to earn arbitrage returns, this project was created so that I could learn some of the basics of machine learning.
+
+## Technologies Used
+
+- Python
+- Django
+- JavaScript
+- Vue.js
+- Keras
+- Tensorflow
 
 ## Set-up
 
